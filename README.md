@@ -34,9 +34,43 @@ dtypes: float64(8), object(9)
 memory usage: 341.7+ KB
 ```
 5. df.isnull().sum()를 통해서 결측치가 있는지 확인합니다<br>
-<img width="278" height="606" alt="image" src="https://github.com/user-attachments/assets/550dc606-b0c6-48ec-aa43-a7cdc76964c0" />
+<img width="278" height="606" alt="image" src="https://github.com/user-attachments/assets/550dc606-b0c6-48ec-aa43-a7cdc76964c0" /><br>
+6. df.dtyes로 수치형 데이터(float, int)와 범주형 데이터(object)를 확인합니다.<br>
+7. df.columns로 행 가볍게 확인해줍니다.<br>
+8. print(df.dtypes)로 데이터 최종 확인 하고,<br>
+df['BMI'] = df['Weight'] / (df['Height']**2)으로 BMI 구해줍니다.<br>
+df[['Height', 'Weight', 'BMI']].head()로 데이터가 잘 만들어졌는데 확인합니다.<br>
+```
+	Height	Weight	BMI
+0	1.62	64.0	24.386526
+1	1.52	56.0	24.238227
+2	1.80	77.0	23.765432
+3	1.80	87.0	26.851852
+4	1.78	89.8	28.342381
+```
+9. 
+```
+import seaborn as sns
+import matplotlib.pyplot as plt
+from scipy import stats
+import numpy as np
 
+# 1. 상관계수(r) 확인: BMI와 운동량(FAF)의 관계
+correlation = df['BMI'].corr(df['FAF'])
+print(f"1. 상관계수(r): {correlation:.4f}")
 
+# 2. 결정계수(R^2) 확인: 단순회귀분석
+# 운동량이 BMI를 얼마나 설명하는지!
+slope, intercept, r_value, p_value, std_err = stats.linregress(df['FAF'], df['BMI'])
+print(f"2. 결정계수(R^2): {r_value**2:.4f}")
+print(f"3. p-value: {p_value:.4f}")
+
+# 3. 시각화 (산점도 + 회귀선)
+plt.figure(figsize=(10, 6))
+sns.regplot(x='FAF', y='BMI', data=df, line_kws={'color':'red'})
+plt.title('Exercise Frequency(FAF) vs BMI')
+plt.show()
+```
 
 ### 가설 설정<br>
 * 귀무가설($H_0$) : 운동량(X)와 BMI(Y)의 관계는 독립관계이다(유의마한 관계가 없다.)<br>
